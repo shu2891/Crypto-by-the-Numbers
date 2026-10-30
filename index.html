@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>加密貨幣的真相 · Crypto by the Numbers</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ===== 頂部導覽 ===== -->
+  <nav class="topnav">
+    <span class="logo">₿ Crypto by the Numbers</span>
+    <a href="#who">01 誰在持有</a>
+    <a href="#why">02 通膨與持有</a>
+    <a href="#power">03 用電代價</a>
+    <a href="#source">資料來源</a>
+  </nav>
+
+  <!-- ===== 開場 ===== -->
+  <header class="hero">
+    <!-- <p class="eyebrow">資料視覺化科普 · 期中專題</p> -->
+    <h1>全世界有多少人持有加密貨幣？<br><span>它又吃掉了多少電？</span></h1>
+    <p class="lead">誰在用、為什麼用、要付出什麼代價。</p>
+
+    <div class="kpis">
+      <div class="kpi">
+        <div class="kpi-num" id="kpi-owners">—</div>
+        <div class="kpi-label">全球加密貨幣持有人<br><small>Triple-A, 2024</small></div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-num" id="kpi-internet">—</div>
+        <div class="kpi-label">網路使用者中持有比例<br><small>DataReportal / GWI</small></div>
+      </div>
+      <div class="kpi orange">
+        <div class="kpi-num" id="kpi-twh">—</div>
+        <div class="kpi-label">比特幣 2025 年用電<br><small>劍橋 CBECI</small></div>
+      </div>
+      <div class="kpi orange">
+        <div class="kpi-num" id="kpi-taiwan">—</div>
+        <div class="kpi-label">相當於台灣一年用電<br><small>CBECI × EIA</small></div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===== 01 誰在持有 ===== -->
+    <section id="who" class="section">
+      <div class="section-head">
+        <span class="num">01</span>
+        <div>
+          <h2>誰在持有加密貨幣？</h2>
+          <p>16–64 歲網路使用者中，回答「持有加密貨幣」的比例（共 54 個國家）。</p>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">持有率世界地圖 <span class="hint">滑鼠移到國家上看數字</span></div>
+          <div id="chart-map" class="chart chart-tall"></div>
+          <p class="note" id="map-note">灰色＝沒有調查資料。新加坡、香港面積太小，地圖上看不到，請看右邊排行。</p>
+        </div>
+
+        <div class="card">
+          <div class="card-title">
+            國家排行
+            <div class="btn-group" id="rank-filter">
+              <button data-filter="top" class="active">前 15 名</button>
+              <button data-filter="asia">亞洲</button>
+              <button data-filter="all">全部</button>
+            </div>
+          </div>
+          <div id="chart-rank" class="chart chart-tall"></div>
+        </div>
+      </div>
+
+      <div class="insight">
+        <h3>重點發現</h3>
+        <ul>
+          <li><b>持有率最高的不是歐美</b>：土耳其（25.6%）、巴西、南非、奈及利亞、阿根廷都排在美國（12.5%）前面。</li>
+          <li><b>台灣 7.6%</b>，低於全球平均 9.9%；日本（5.0%）和中國（3.7%，官方禁止交易）更低。</li>
+          <li>這是<b>問卷調查</b>，只問了網路使用者，所以不等於「全國人口」的持有率。</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== 02 通膨 ===== -->
+    <section id="why" class="section">
+      <div class="section-head">
+        <span class="num">02</span>
+        <div>
+          <h2>通膨越高，越多人買加密貨幣嗎？</h2>
+          <p>每個點是一個國家：橫軸是 World Bank 通膨率，縱軸是加密貨幣持有率，點的大小是人口。</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          通膨率 × 持有率
+          <div class="controls">
+            <div class="btn-group" id="inf-year">
+              <button data-year="inf2024" class="active">2024 通膨</button>
+              <button data-year="inf2023">2023 通膨</button>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="drop-outliers">
+              <span>排除阿根廷、土耳其</span>
+            </label>
+          </div>
+        </div>
+        <div class="corr-box">
+          相關係數 r = <b id="corr-r">—</b>
+          <span id="corr-text"></span>
+        </div>
+        <div id="chart-scatter" class="chart chart-tall"></div>
+        <p class="note">橫軸是對數刻度（1%、10%、100%），因為阿根廷通膨 220%，用一般刻度其他國家會擠成一團。台灣不在 World Bank 資料中，所以沒有畫出來。</p>
+      </div>
+
+      <div class="insight">
+        <h3>重點發現</h3>
+        <ul>
+          <li>整體來看有<b>中度正相關</b>（r ≈ 0.36）：通膨高的阿根廷、土耳其、奈及利亞，持有率也高。</li>
+          <li>但<b>只要拿掉阿根廷和土耳其兩個國家，r 就掉到 0.13</b>，幾乎沒有關係。打勾上面的選項試試看。</li>
+          <li>反例很多：泰國通膨 0.4% 但持有率 14.7%；埃及通膨 28% 但持有率只有 5.1%。<b>相關不等於因果</b>，法規、網路普及、投機風氣都會影響。</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== 03 用電 ===== -->
+    <section id="power" class="section">
+      <div class="section-head">
+        <span class="num orange">03</span>
+        <div>
+          <h2>比特幣吃掉多少電？</h2>
+          <p>比特幣靠「挖礦」維持運作，礦機日夜運算，消耗大量電力。</p>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">
+            比特幣用電趨勢
+            <div class="btn-group" id="energy-mode">
+              <button data-mode="band" class="active">年化估計</button>
+              <button data-mode="year">每年總和</button>
+            </div>
+          </div>
+          <div id="chart-energy" class="chart"></div>
+          <p class="note" id="energy-note">深色線是最佳估計，淺色帶是可能範圍（上限、下限），單位 TWh／年。</p>
+        </div>
+
+        <div class="card">
+          <div class="card-title">
+            跟誰一樣多？
+            <div class="btn-group" id="compare-mode">
+              <button data-mode="near" class="active">同級國家</button>
+              <button data-mode="asia">亞洲鄰居</button>
+              <button data-mode="other">其他用途</button>
+            </div>
+          </div>
+          <div id="chart-compare" class="chart"></div>
+          <p class="note">國家用電來自 U.S. EIA（約 2019 年），比特幣為 2025 年合計。</p>
+        </div>
+      </div>
+
+      <div class="insight orange">
+        <h3>重點發現</h3>
+        <ul>
+          <li>比特幣 2025 年用了 <b>約 189 TWh</b>，比 2017 年（13 TWh）多了 14 倍以上。</li>
+          <li>這相當於<b>台灣一年用電的 68%</b>，比整個荷蘭、阿根廷、瑞典還多，約占全球用電 0.69%。</li>
+          <li>估計範圍很大（約 90～340 TWh），因為沒人知道每台礦機的真實耗電，只能用模型推估。劍橋 2025 年調查指出，挖礦用電中約 52% 來自再生能源與核能。</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ===== 資料來源 ===== -->
+    <section id="source" class="section sources">
+      <h2>資料來源與處理</h2>
+      <table>
+        <thead><tr><th>主題</th><th>資料</th><th>來源</th></tr></thead>
+        <tbody>
+          <tr><td>持有率</td><td>16–64 歲網路使用者持有加密貨幣比例，54 國</td><td>DataReportal Digital 2025（GWI 問卷），經 DemandSage 整理</td></tr>
+          <tr><td>持有人數</td><td>全球約 5.6 億人</td><td>Triple-A, Cryptocurrency Ownership Data 2024</td></tr>
+          <tr><td>通膨</td><td>消費者物價年增率 (FP.CPI.TOTL.ZG)、人口</td><td>World Bank Open Data API</td></tr>
+          <tr><td>比特幣用電</td><td>年度合計、每日年化估計（上下限）</td><td>Cambridge Bitcoin Electricity Consumption Index (CBECI)</td></tr>
+          <tr><td>各國用電</td><td>各國年用電量 TWh</td><td>U.S. EIA，經 CBECI Comparisons 頁面整理</td></tr>
+        </tbody>
+      </table>
+      <!-- <p class="note">處理流程：原始檔放在 <code>data/raw/</code>，用 <code>scripts/build_data.py</code> 合併國家代碼、計算相關係數與倍數，輸出 <code>data/data.js</code> 給網頁使用。資料擷取日期：2026-10-30。</p> -->
+    </section>
+  </main>
+
+  <footer>Crypto by the Numbers · 期中專題 · 圖表使用 Apache ECharts</footer>
+
+  <!-- 圖表函式庫（本機檔案） -->
+  <script src="assets/echarts.min.js"></script>
+  <!-- 資料 -->
+  <script src="data/data.js"></script>
+  <!-- 各區塊的圖表程式 -->
+  <script src="js/theme.js"></script>
+  <script src="js/chart-ownership.js"></script>
+  <script src="js/chart-inflation.js"></script>
+  <script src="js/chart-energy.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
